@@ -21,7 +21,7 @@ appRouter.route('/')
         res.end(JSON.stringify(query.rows))
     })
     .post(async (req, res, next) => {
-        const query =  await client.query(`INSERT INTO shop(id,name,created_at,updated_at) VALUES('${req.body.id}','${req.body.name}','${req.body.created_at}','${req.body.updated_at}');`)
+        const query =  await client.query(`INSERT INTO shop(id,name,created_at,updated_at) VALUES('${req.body.id}','${req.body.name}','${req.body.createdAt}','${req.body.updatedAt}');`)
         res.end(`Agregar el shop ${req.body.name}`)
     })
     .put((req, res, next) => {
