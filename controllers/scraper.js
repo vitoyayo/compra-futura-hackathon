@@ -32,7 +32,7 @@ module.exports = {
         const shopUrlSplited = elem.href.split('/');
         return {
           shopName: elem.querySelector('h4 b').innerText,
-          shopId: shopUrlSplited[shopUrlSplited.length],
+          shopId: shopUrlSplited[shopUrlSplited.length - 1],
         };
       });
     }, shopListSelector);
