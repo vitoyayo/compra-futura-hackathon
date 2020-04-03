@@ -6,7 +6,8 @@ const launchHeadless = Boolean(Number(process.env.HEADLESS));
 let browser;
 
 const launchBrowser = async () => {
-  return puppeteer.launch({
+
+  return uppeteer.launch({
     args: ['--no-sandbox'],
     headless: launchHeadless,
   });
@@ -21,10 +22,17 @@ module.exports = {
     return browser ? await browser.close() : Promise.reject(new Error('Browser is not active'));
   },
   launchBrowser: async function() {
-    browser = browser || (await launchBrowser());
+    return browser ||
+        (await puppeteer.launch({
+          args: ['--no-sandbox'],
+          headless: launchHeadless,
+        }));
   },
-  getShopList: async function() {
-    const page = await browser.newPage();
+
+
+getShopList: async function() {
+     let browser = await this.launchBrowser();
+     const page = await browser.newPage();
     // Asumo que si se llamó a la función sin argumentos, es la primera llamada.
     await page.goto(shopListUrl, { timeout: 45000, waitUntil: 'load' });
     await page.waitForSelector(shopListSelector);
@@ -37,27 +45,29 @@ module.exports = {
         return {
           shopName: elem.querySelector('h4 b').innerText,
           shopId: shopUrlSplited[shopUrlSplited.length - 1],
-          createdAt: Date.now(),
-          updatedAt: Date.now()
+          createdAt: new Date().toDateString(),
+          updatedAt: new Date().toDateString()
         };
       });
     }, shopListSelector);
+    this.closeBrowser();
   },
-  shopList: async function () {
-    let array = getShopList();
-    console.log('********************* intro shoplist********************************')
-    console.log(array)
-    /*axios.post(/shops/,{
-      name: ,
-      id: ,
-      created_at: ,
-      updated_at:
-    }).then(function(response){
-      console.log(response)
-    }).catch(function(error){
-      console.log(error)
-    })*/
 
+  shopList: async function () {
+      let list_shops = await this.getShopList();
+      list_shops.forEach(element =>
+        axios.post(`http://${process.env.HOST}:${process.env.PORT}/shops`,{
+        name: element.name ,
+        id: element.id,
+        created_at: element.createdAt ,
+        updated_at: element.updatedAt
+      }).then(function(response){
+        console.log(response)
+      }).catch(function(error){
+        console.log(error)
+        console.log(error)
+      })
+      )
   }
 
 /*
