@@ -2,7 +2,7 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const appRouter = express.Router()
 const { Client } = require('pg')
-const connectionString = 'postgresql://pguser:satyr123@127.0.0.1/capacitacion'
+const connectionString = 'postgresql://pguser:satyr123@127.0.0.1/compra-futura'
 
 const client = new Client({
     connectionString
@@ -18,36 +18,36 @@ appRouter.route('/')
         next()
     })
     .get(async (req, res, next) =>{
-        const query = await client.query("SELECT * FROM dishes")
+        const query = await client.query("SELECT * FROM shop")
         res.end(JSON.stringify(query.rows))
     })
     .post(async (req, res, next) => {
-        const query =  await client.query(`INSERT INTO dishes(name) VALUES('${req.body.name}');`)
-        res.end(`Agregar el dish ${req.body.name}`)
+        const query =  await client.query(`INSERT INTO shop(id,name,created_at,updated_at) VALUES('${req.body.id}','${req.body.name}','${req.body.created_at}','${req.body.updated_at}');`)
+        res.end(`Agregar el shop ${req.body.name}`)
     })
     .put((req, res, next) => {
         res.statusCode = 403
-        res.end('PUT OPERATION NOT SUPPORTED ON /DISHES')
+        res.end('PUT OPERATION NOT SUPPORTED ON /SHOPS')
     })
     .delete((req, res, next) =>{
-        res.end(`borrando todos los dishes`)
+        res.end(`borrando todos LOS NO INSERTADOS`)
     })
 // /dishes/123
-appRouter.route('/:dishId')
+appRouter.route('/:shopId')
     .all((req, res, next) =>{
         res.statusCode = 200
         res.setHeader('Content-type','text/plain')
         next()
     })
     .get(async (req, res, next) =>{
-        const query = await client.query(`SELECT * FROM dishes where id=${req.params.dishId}`)
+        const query = await client.query(`SELECT * FROM shop where id=${req.params.shopId}`)
         res.end(JSON.stringify(query.rows))
     })
     .put((req,res, next)=>{
-        res.end(`modificar el dish ${req.params.dishId}: ${req.body.name} - ${req.body.description}`)
+        res.end(`modificar el dish ${req.params.shopId}: ${req.body.name} - ${req.body.id}`)
     })
     .delete((req, res, next) =>{
-        res.end(`Borrando todos los dishes`)
+        res.end(`Borrando todos los shops`)
     })
 module.exports  = appRouter
 
