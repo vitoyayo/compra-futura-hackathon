@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 const puppeteer = require('puppeteer');
 const queue = require('../utils/queue');
 const axios = require('axios');
@@ -13,7 +15,7 @@ const launchBrowser = async () => {
   });
 };
 
-const shopListUrl = 'https://comprafutura.com/comercios';
+const shopListUrl = process.env.URL_SHOPS;
 const shopListSelector = '.biz-card a';
 
 

@@ -5,7 +5,7 @@ const morgan = require('morgan')
 const bodyParser = require('body-parser')
 const appRouter = require('./routes/appRoutes')
 const scraper = require('./controllers/scraper')
-require('dotenv');
+require('dotenv').config()
 
 const app  = express()
 //interpreta todo lo que venga en el body como un json
