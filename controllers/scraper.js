@@ -1,5 +1,5 @@
 const puppeteer = require('puppeteer');
-const queue = require('./queue');
+const queue = require('../utils/queue');
 
 const launchHeadless = Boolean(Number(process.env.HEADLESS));
 let browser;
@@ -28,10 +28,13 @@ module.exports = {
 
     return await page.evaluate((selector) => {
       const shops = document.querySelectorAll(selector);
-      return Array.from(shops).map((elem) => ({
-        shopName: elem.querySelector('h4 b').innerText,
-        shopId: elem.href.split('/')[1],
-      }));
+      return Array.from(shops).map((elem) => {
+        const shopUrlSplited = elem.href.split('/');
+        return {
+          shopName: elem.querySelector('h4 b').innerText,
+          shopId: shopUrlSplited[shopUrlSplited.length],
+        };
+      });
     }, shopListSelector);
   },
   async getShopInfo(shopList, productSelectors) {
