@@ -24,15 +24,15 @@ module.exports = {
   async getShopList() {
     const page = await browser.newPage();
     // Asumo que si se llamó a la función sin argumentos, es la primera llamada.
-    await page.goto(shopListUrl, { timeout: 45000, waitUntil: 'domcontentloaded' });
-
+    await page.goto(shopListUrl, { timeout: 45000, waitUntil: 'load' });
+    await page.waitForSelector(shopListSelector);
     return await page.evaluate((selector) => {
       const shops = document.querySelectorAll(selector);
       return Array.from(shops).map((elem) => {
         const shopUrlSplited = elem.href.split('/');
         return {
           shopName: elem.querySelector('h4 b').innerText,
-          shopId: shopUrlSplited[shopUrlSplited.length],
+          shopId: shopUrlSplited[shopUrlSplited.length - 1],
         };
       });
     }, shopListSelector);
