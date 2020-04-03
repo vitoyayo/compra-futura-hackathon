@@ -9,7 +9,6 @@ const client = new Client({
 })
 
 client.connect()
-// /dishes
 
 appRouter.route('/')
     .all((req, res, next) =>{
@@ -32,7 +31,7 @@ appRouter.route('/')
     .delete((req, res, next) =>{
         res.end(`borrando todos LOS NO INSERTADOS`)
     })
-// /dishes/123
+// /shops/123
 appRouter.route('/:shopId')
     .all((req, res, next) =>{
         res.statusCode = 200
