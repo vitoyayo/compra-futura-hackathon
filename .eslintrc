@@ -1,0 +1,41 @@
+{
+  "env": {
+    "es6": true,
+    "node": true,
+    "browser": true
+  },
+  "parserOptions": {
+    "ecmaVersion": 2018,
+    "ecmaFeatures": {
+      "spread": true,
+      "modules": true,
+      "destructuring": true,
+      "experimentalObjectRestSpread": true
+    },
+    "sourceType": "module"
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:prettier/recommended"
+  ],
+  "settings": {
+  },
+  "rules": {
+    "prefer-const": "warn",
+    "no-var": "error",
+    "no-useless-constructor": "error",
+    "prefer-arrow-callback": "error",
+    "prefer-template": "error",
+    "sort-imports": 0,
+    "consistent-return": "error",
+    "default-case": "error",
+    "eqeqeq": "error",
+    "no-else-return": "error",
+    "no-eq-null": "error",
+    "no-loop-func": "error",
+    "no-unmodified-loop-condition": "error",
+    "no-unused-expressions": "error",
+    "yoda": "error",
+    "no-console": "off"
+  }
+}
