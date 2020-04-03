@@ -9,7 +9,7 @@ const port = 550
 const app  = express()
 //interpreta todo lo que venga en el body como un json
 app.use(bodyParser.json())
-//esto lo uqe hace es llamar cada callbacks y los va ejecutando uno a uno y los lanza al server como un middleware
+//esto lo que hace es llamar cada callbacks y los va ejecutando uno a uno y los lanza al server como un middleware
 app.use(morgan('dev'))
 app.use(express.static(__dirname + '/public'))
 app.use('/dishes' , appRouter)
