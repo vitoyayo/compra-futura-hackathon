@@ -24,8 +24,8 @@ module.exports = {
   async getShopList() {
     const page = await browser.newPage();
     // Asumo que si se llamó a la función sin argumentos, es la primera llamada.
-    await page.goto(shopListUrl, { timeout: 45000, waitUntil: 'domcontentloaded' });
-
+    await page.goto(shopListUrl, { timeout: 45000, waitUntil: 'load' });
+    await page.waitForSelector(shopListSelector);
     return await page.evaluate((selector) => {
       const shops = document.querySelectorAll(selector);
       return Array.from(shops).map((elem) => {
