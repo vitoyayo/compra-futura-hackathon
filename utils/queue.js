@@ -1,10 +1,10 @@
 const maxQueue = Infinity;
-const maxPendingTasks = 1;
+let maxConcurrentTasks = 10;
 let pendingTasks = 0;
 const queue = [];
 
 const processQueue = function () {
-  if (pendingTasks >= maxPendingTasks) {
+  if (pendingTasks >= maxConcurrentTasks) {
     return false;
   }
 
@@ -31,6 +31,9 @@ const processQueue = function () {
 };
 
 module.exports = {
+  setMaxConcurrentTasks(amount) {
+    if (pendingTasks === 0) maxConcurrentTasks = amount;
+  },
   addTask(task) {
     return new Promise(
       /* eslint-disable consistent-return */
