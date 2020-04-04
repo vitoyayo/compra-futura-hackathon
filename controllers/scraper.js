@@ -73,6 +73,7 @@ module.exports = {
     const list_shops = await this.getShopList();
     const shopsInfo = await this.getShopInfo(list_shops);
     performance.mark('ScrapingEnd');
+    console.log(`Scraped ${shopsInfo.length} in...`);
     performance.measure('ScrapingTime', 'ScrapingStart', 'ScrapingEnd');
 
     await closeBrowser();
