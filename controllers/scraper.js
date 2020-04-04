@@ -3,9 +3,11 @@ const fs = require('fs');
 const puppeteer = require('puppeteer');
 const queue = require('../utils/queue');
 const axios = require('axios');
-
+const { PerformanceObserver, performance } = require('perf_hooks');
 const launchHeadless = true;
 let browser;
+
+queue.setMaxConcurrentTasks(35);
 
 const launchBrowser = async () => {
   browser =
@@ -20,6 +22,13 @@ const launchBrowser = async () => {
 const closeBrowser = async () => {
   return browser ? await browser.close() : Promise.reject(new Error('Browser is not active'));
 };
+
+const obs = new PerformanceObserver((list, observer) => {
+  console.log(`Scraped in ${list.getEntries()[0].duration / 1000 / 60} minutes`);
+  performance.clearMarks();
+  observer.disconnect();
+});
+obs.observe({ entryTypes: ['measure'], buffered: true });
 
 const shopListUrl = process.env.URL_SHOPS;
 const shopBaseUrl = 'https://comprafutura.com/comercio/';
@@ -60,8 +69,13 @@ module.exports = {
 
   shopList: async function () {
     await launchBrowser();
+    performance.mark('ScrapingStart');
     const list_shops = await this.getShopList();
     const shopsInfo = await this.getShopInfo(list_shops);
+    performance.mark('ScrapingEnd');
+    console.log(`Scraped ${shopsInfo.length} in...`);
+    performance.measure('ScrapingTime', 'ScrapingStart', 'ScrapingEnd');
+
     await closeBrowser();
     fs.writeFileSync('shop-list.json', JSON.stringify(list_shops));
     fs.writeFileSync('shops-info.json', JSON.stringify(shopsInfo));
@@ -110,6 +124,7 @@ module.exports = {
                 });
                 return {
                   shopId: shop.shopId,
+                  shopName: shop.shopName,
                   logoUrl: logoUrlElem ? logoUrlElem.src : null,
                   instagramProfile: instagramProfileElem ? instagramProfileElem.href : null,
                   shopDescription: shopDescriptionElem ? shopDescriptionElem.innerText : null,
